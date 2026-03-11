@@ -1,4 +1,4 @@
-let shelf = JSON.parse(localStorage.getItem("shelf")) || []
+let shelf = []
 
 async function searchBooks(){
 
@@ -17,7 +17,7 @@ results.innerHTML=""
 data.items.forEach(book=>{
 
 let cover = book.volumeInfo.imageLinks?.thumbnail
-if(!cover) return
+let title = book.volumeInfo.title
 
 let img = document.createElement("img")
 img.src = cover
@@ -34,38 +34,28 @@ function addBook(book){
 
 shelf.push(book)
 
-localStorage.setItem("shelf",JSON.stringify(shelf))
-
 renderShelf()
 
 }
 
 function renderShelf(){
 
-let rows=[
-document.getElementById("shelf1"),
-document.getElementById("shelf2"),
-document.getElementById("shelf3")
-]
+let shelfDiv = document.getElementById("shelf")
 
-rows.forEach(row=>row.innerHTML="")
+shelfDiv.innerHTML=""
 
-shelf.forEach((book,index)=>{
+shelf.forEach(book=>{
 
 let cover = book.volumeInfo.imageLinks?.thumbnail
 
-let div=document.createElement("div")
+let div = document.createElement("div")
 div.className="book"
 
-div.innerHTML=`<img src="${cover}">`
+div.innerHTML = `<img src="${cover}">`
 
-div.onclick=()=>showDetails(book)
+div.onclick = ()=> showDetails(book)
 
-let rowIndex=Math.floor(index/8)
-
-if(rows[rowIndex]){
-rows[rowIndex].appendChild(div)
-}
+shelfDiv.appendChild(div)
 
 })
 
@@ -73,15 +63,13 @@ rows[rowIndex].appendChild(div)
 
 function showDetails(book){
 
-let info=book.volumeInfo
+let info = book.volumeInfo
 
 alert(
-info.title+"\n\n"+
-"Author: "+(info.authors||"Unknown")+"\n\n"+
-"Genre: "+(info.categories||"Unknown")+"\n\n"+
-(info.description||"No description available")
+info.title + "\n\n" +
+"Author: " + info.authors + "\n\n" +
+"Genre: " + info.categories + "\n\n" +
+info.description
 )
 
 }
-
-renderShelf()
